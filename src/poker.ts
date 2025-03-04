@@ -19,7 +19,7 @@ for (let i = 0; i < hand1Rank.sortedValues.length; i++) {
 return 0; 
 } 
 
-function getHandStats(hand: string[]) {
+export function getHandStats(hand: string[]) {
 const values = hand.map(card => card.slice(0, -1));
 const suits = hand.map(card => card.slice(-1));
 
@@ -29,7 +29,7 @@ values.forEach(value => valueCounts[value] = (valueCounts[value] || 0) + 1);
 return { values, suits, valueCounts };
 }
 
-function getHandRank(hand: string[]): { rank: number, sortedValues: number[] } {
+export function getHandRank(hand: string[]): { rank: number, sortedValues: number[] } {
     const { values, suits, valueCounts } = getHandStats(hand);
     const counts = Object.values(valueCounts).sort((a, b) => b - a);
     const isFlush = new Set(suits).size === 1;
@@ -53,7 +53,7 @@ function getHandRank(hand: string[]): { rank: number, sortedValues: number[] } {
     return { rank: 1, sortedValues: sortedByFrequency }; 
   }
 
-function isStraight(sortedRanks: number[]): boolean {
+export function isStraight(sortedRanks: number[]): boolean {
 return (
     sortedRanks.every((v, i, arr) => i === 0 || v === arr[i - 1] + 1) ||
     (sortedRanks.includes(14) && sortedRanks.slice(0, 4).join() === "2,3,4,5") 
