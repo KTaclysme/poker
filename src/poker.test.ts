@@ -1,4 +1,4 @@
-import { compareHands, getHandStats } from "./poker";
+import { compareHands, getHandStats, isStraight } from "./poker";
 
 describe("compareHands", () => {
   test("Doit détecter une Quinte Flush gagnante", () => {
@@ -78,5 +78,29 @@ describe("getHandStats", () => {
     expect(result.values).toEqual(["5", "5", "8", "10", "2"]);
     expect(result.suits).toEqual(["H", "D", "S", "C", "H"]);
     expect(result.valueCounts).toEqual({ "5": 2, "8": 1, "10": 1, "2": 1 });
+  });
+});
+
+describe("isStraight", () => {
+  test("Doit détecter une quinte normale", () => {
+    expect(isStraight([2, 3, 4, 5, 6])).toBe(true);
+    expect(isStraight([10, 11, 12, 13, 14])).toBe(true);
+  });
+
+  test("Doit détecter une quinte As-bas (A-2-3-4-5)", () => {
+    expect(isStraight([2, 3, 4, 5, 14])).toBe(true);
+  });
+
+  test("Ne doit pas détecter une quinte avec une interruption", () => {
+    expect(isStraight([2, 3, 5, 6, 7])).toBe(false);
+    expect(isStraight([10, 11, 13, 14, 2])).toBe(false);
+  });
+
+  test("Ne doit pas détecter une quinte avec des doublons", () => {
+    expect(isStraight([2, 3, 3, 4, 5])).toBe(false);
+  });
+
+  test("Ne doit pas détecter une quinte pour des cartes non consécutives", () => {
+    expect(isStraight([7, 9, 10, 11, 12])).toBe(false);
   });
 });
