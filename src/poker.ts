@@ -3,7 +3,21 @@ const RANK_VALUES: Record<string, number> = {
     "J": 11, "Q": 12, "K": 13, "A": 14
   };
 
-// export function compareHands(hand1: string[], hand2: string[]): number {} 
+export function compareHands(hand1: string[], hand2: string[]): number {
+const hand1Rank = getHandRank(hand1);
+const hand2Rank = getHandRank(hand2);
+
+if (hand1Rank.rank > hand2Rank.rank) return 1;
+if (hand1Rank.rank < hand2Rank.rank) return -1;
+
+
+for (let i = 0; i < hand1Rank.sortedValues.length; i++) {
+    if (hand1Rank.sortedValues[i] > hand2Rank.sortedValues[i]) return 1;
+    if (hand1Rank.sortedValues[i] < hand2Rank.sortedValues[i]) return -1;
+}
+
+return 0; 
+} 
 
 function getHandStats(hand: string[]) {
 const values = hand.map(card => card.slice(0, -1));
@@ -45,5 +59,3 @@ return (
     (sortedRanks.includes(14) && sortedRanks.slice(0, 4).join() === "2,3,4,5") 
 );
 }
-
-console.log(getHandRank(["AH", "3D", "JS", "5C", "6H"]))
