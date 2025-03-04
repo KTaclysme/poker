@@ -1,4 +1,4 @@
-import { compareHands } from "./poker";
+import { compareHands, getHandStats } from "./poker";
 
 describe("compareHands", () => {
   test("Doit détecter une Quinte Flush gagnante", () => {
@@ -43,5 +43,40 @@ describe("compareHands", () => {
 
   test("Doit renvoyer -1 si la deuxième main gagne", () => {
     expect(compareHands(["2H", "3D", "4S", "5C", "6H"], ["10H", "JH", "QH", "KH", "AH"])).toBe(-1);
+  });
+});
+
+describe("getHandStats", () => {
+  test("Doit retourner les valeurs et couleurs des cartes", () => {
+    const hand = ["9H", "9D", "9S", "9C", "2H"];
+    const result = getHandStats(hand);
+    
+    expect(result.values).toEqual(["9", "9", "9", "9", "2"]);
+    expect(result.suits).toEqual(["H", "D", "S", "C", "H"]);
+  });
+
+  test("Doit compter correctement les occurrences des valeurs", () => {
+    const hand = ["9H", "9D", "9S", "9C", "2H"];
+    const result = getHandStats(hand);
+
+    expect(result.valueCounts).toEqual({ "9": 4, "2": 1 });
+  });
+
+  test("Doit fonctionner avec une main sans répétition", () => {
+    const hand = ["AH", "KD", "QS", "JC", "10H"];
+    const result = getHandStats(hand);
+
+    expect(result.values).toEqual(["A", "K", "Q", "J", "10"]);
+    expect(result.suits).toEqual(["H", "D", "S", "C", "H"]);
+    expect(result.valueCounts).toEqual({ "A": 1, "K": 1, "Q": 1, "J": 1, "10": 1 });
+  });
+
+  test("Doit fonctionner avec une main comportant une paire", () => {
+    const hand = ["5H", "5D", "8S", "10C", "2H"];
+    const result = getHandStats(hand);
+
+    expect(result.values).toEqual(["5", "5", "8", "10", "2"]);
+    expect(result.suits).toEqual(["H", "D", "S", "C", "H"]);
+    expect(result.valueCounts).toEqual({ "5": 2, "8": 1, "10": 1, "2": 1 });
   });
 });
