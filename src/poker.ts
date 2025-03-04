@@ -15,4 +15,35 @@ values.forEach(value => valueCounts[value] = (valueCounts[value] || 0) + 1);
 return { values, suits, valueCounts };
 }
 
-console.log(getHandStats(["9H", "9D", "9S", "9C", "2H"]))
+function getHandRank(hand: string[]): { rank: number, sortedValues: number[] } {
+    const { values, suits, valueCounts } = getHandStats(hand);
+    const counts = Object.values(valueCounts).sort((a, b) => b - a);
+    const isFlush = new Set(suits).size === 1;
+  
+    const sortedRanks = values.map(v => RANK_VALUES[v]).sort((a, b) => a - b);
+    const isStraightHand = isStraight(sortedRanks);
+  
+    const sortedByFrequency = Object.entries(valueCounts)
+      .map(([value, count]) => ({ value: RANK_VALUES[value], count }))
+      .sort((a, b) => b.count - a.count || b.value - a.value)
+      .map(v => v.value);
+  
+    if (isFlush && isStraightHand) return { rank: 9, sortedValues: sortedRanks.reverse() }; 
+    if (counts[0] === 4) return { rank: 8, sortedValues: sortedByFrequency }; 
+    if (counts[0] === 3 && counts[1] === 2) return { rank: 7, sortedValues: sortedByFrequency }; 
+    if (isFlush) return { rank: 6, sortedValues: sortedRanks.reverse() }; 
+    if (isStraightHand) return { rank: 5, sortedValues: sortedRanks.reverse() }; 
+    if (counts[0] === 3) return { rank: 4, sortedValues: sortedByFrequency }; 
+    if (counts[0] === 2 && counts[1] === 2) return { rank: 3, sortedValues: sortedByFrequency }; 
+    if (counts[0] === 2) return { rank: 2, sortedValues: sortedByFrequency }; 
+    return { rank: 1, sortedValues: sortedByFrequency }; 
+  }
+
+function isStraight(sortedRanks: number[]): boolean {
+return (
+    sortedRanks.every((v, i, arr) => i === 0 || v === arr[i - 1] + 1) ||
+    (sortedRanks.includes(14) && sortedRanks.slice(0, 4).join() === "2,3,4,5") 
+);
+}
+
+console.log(getHandRank(["AH", "3D", "JS", "5C", "6H"]))
