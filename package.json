@@ -6,7 +6,8 @@
     "build": "tsc",
     "start": "node dist/poker.js",
     "dev": "ts-node src/poker.ts",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",
